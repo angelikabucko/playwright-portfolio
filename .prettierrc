@@ -1,0 +1,14 @@
+{
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "printWidth": 1000,
+    "overrides": [{
+        "files": "*.page.ts",
+        "options": {
+            "printWidth": 1000
+        }
+    }]
+}
