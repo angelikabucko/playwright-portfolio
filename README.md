@@ -5,8 +5,9 @@ Portfolio of UI &amp; API Playwright tests using TypeScript
 # Description
 
 This project consists of both UI & API Playwright/TS tests that run on sites dedicated for practicing test automation skills.
-For API: https://restful-booker.herokuapp.com/
-For UI: https://www.saucedemo.com/v1/index.html
+
+- For API: https://restful-booker.herokuapp.com/
+- For UI: https://www.saucedemo.com/v1/index.html
 
 # To start with the project:
 
