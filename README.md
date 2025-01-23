@@ -29,4 +29,4 @@ All details necessary to fill in those variables are available on the respective
 
 You should be able to run all tests by typing `npx playwright test` in the terminal. You can run separate projects by specifing their name, e.g. `npx playwright test --project=chromium`
 
-Feel free to drop me a message or email me at angelika.b.99@gmail.com if you have issues with running this repo.
+Feel free to drop me a message or email me at angelbunia9@gmail.com if you have issues with running this repo.
