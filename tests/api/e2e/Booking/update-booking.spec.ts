@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { BookingResponse } from './utils/interfaces';
 import * as utils from './utils/api.utils';
 import dotenv from 'dotenv';
 dotenv.config();
 
 let authToken: string;
-let createBooking: any;
+let createBooking: BookingResponse;
 let bookingId: number;
 
 test.describe('Feature: Update booking', () => {

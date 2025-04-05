@@ -1,18 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { APIRequestContext, expect } from '@playwright/test';
+import { User } from './user.type';
+import { BookingResponse } from './interfaces';
 import dotenv from 'dotenv';
 dotenv.config();
 
 let authToken: string;
-let firstName: string;
-let lastName: string;
-let totalPrice: number;
-let depositPaid: boolean;
-let bookingDates: {
-  checkin: string;
-  checkout: string;
-};
-let additionalNeeds: string;
 
 export async function generateAuthToken(request: APIRequestContext) {
   const respToken = await request.post('/auth', {
@@ -26,14 +19,14 @@ export async function generateAuthToken(request: APIRequestContext) {
 }
 
 export async function newBooking() {
-  firstName = faker.person.firstName();
-  lastName = faker.person.lastName();
-  totalPrice = faker.number.int({ max: 10000 });
-  depositPaid = faker.datatype.boolean();
-  bookingDates = { checkin: '2024-12-30', checkout: '2025-01-31' };
-  additionalNeeds = faker.lorem.sentence();
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+  const totalPrice = faker.number.int({ max: 10000 });
+  const depositPaid = faker.datatype.boolean();
+  const bookingDates = { checkin: '2024-12-30', checkout: '2025-01-31' };
+  const additionalNeeds = faker.lorem.sentence();
 
-  const newBookingRequest = {
+  const newBookingRequest: User = {
     firstname: firstName,
     lastname: lastName,
     totalprice: totalPrice,
@@ -45,7 +38,7 @@ export async function newBooking() {
   return newBookingRequest;
 }
 
-export async function createBooking(request: APIRequestContext) {
+export async function createBooking(request: APIRequestContext): Promise<BookingResponse> {
   const createNewBooking = await newBooking();
 
   const createNewBookingResp = await request.post('/booking', {
