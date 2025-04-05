@@ -20,6 +20,7 @@ test.describe('Feature: Create a booking', () => {
     expect(createNewBookingBody).toHaveProperty('bookingid');
     bookingId = createNewBookingBody.bookingid;
 
+    //GET Booking within POST request to double check that request correctly persisted to DB
     const validateNewBooking = await utils.validateResponse(request, bookingId);
     expect(validateNewBooking).toHaveProperty('firstname', createNewBooking.firstname);
     expect(validateNewBooking).toHaveProperty('lastname', createNewBooking.lastname);
