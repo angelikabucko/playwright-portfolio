@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import dotenv from 'dotenv';
-dotenv.config();
 import { LoginPage } from '../../pages/login.page';
 import { Homepage } from '../../pages/home.page';
 import { ProductPage } from '../../pages/product.page';
 import { CheckoutPage } from '../../pages/checkout.page';
 import { ConfirmationPage } from '../../pages/confirmation.page';
+import dotenv from 'dotenv';
+dotenv.config();
 
 let loginPage: LoginPage;
 let homePage: Homepage;
