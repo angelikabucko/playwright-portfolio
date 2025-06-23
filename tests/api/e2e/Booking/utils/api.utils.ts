@@ -5,8 +5,6 @@ import { BookingResponse } from './interfaces';
 import dotenv from 'dotenv';
 dotenv.config();
 
-let authToken: string;
-
 export async function generateAuthToken(request: APIRequestContext) {
   const respToken = await request.post('/auth', {
     data: {
@@ -15,7 +13,8 @@ export async function generateAuthToken(request: APIRequestContext) {
     },
   });
   const tokenBody = await respToken.json();
-  return (authToken = tokenBody.token);
+  const authToken: string = tokenBody.token;
+  return authToken;
 }
 
 export async function newBooking() {
@@ -60,8 +59,7 @@ export async function validateResponse(request: APIRequestContext, bookingId: nu
   return getBookingByIdBody;
 }
 
-export async function deleteBooking(request: APIRequestContext, bookingId: number) {
-  authToken = await generateAuthToken(request);
+export async function deleteBooking(request: APIRequestContext, bookingId: number, authToken: string) {
   const deleteBooking = await request.delete(`/booking/${bookingId}`, {
     headers: {
       Cookie: `token=${authToken}`,
