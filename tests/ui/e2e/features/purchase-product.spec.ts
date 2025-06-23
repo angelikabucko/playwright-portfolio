@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { faker } from '@faker-js/faker';
 import { LoginPage } from '../../pages/login.page';
 import { Homepage } from '../../pages/home.page';
 import { ProductPage } from '../../pages/product.page';
@@ -23,33 +22,34 @@ test.describe('Feature: Purchase a product from the shop', () => {
     confirmationPage = new ConfirmationPage(page);
 
     await loginPage.logIn(process.env.UI_STANDARD_USERNAME!, process.env.UI_STANDARD_PASSWORD!);
+    expect(homePage.shopPageIsVisible(), { message: 'Shop page is not visible' }).toBeTruthy();
   });
 
   test.afterEach('Teardown - Log out', async () => {
-    await confirmationPage.menuButton.click();
-    await confirmationPage.logOutLink.click();
+    await confirmationPage.clickMenuButton();
+    await confirmationPage.clickLogOutLink();
 
-    await expect(loginPage.usernameInput).toBeVisible();
+    expect(loginPage.usernameInputIsVisible(), { message: 'Username Input is not visible' }).toBeTruthy();
   });
 
   test('The user purchases a product from the website, completes the order and recieves a confirmation screen', async () => {
-    await homePage.productBackpack.click();
-    await expect(productPage.productDetails).toBeVisible();
+    await homePage.clickProductBackpack();
+    expect(productPage.productDetailsIsVisible(), { message: 'Product details are not visible' }).toBeTruthy();
 
-    await productPage.addToCartButton.click();
-    await productPage.newItemAdded.click();
+    await productPage.clickAddToCartButton();
+    await productPage.clickNewItemAddedLink();
 
-    await expect(checkoutPage.productName).toBeVisible();
-    await checkoutPage.checkoutButton.click();
-    await checkoutPage.firstNameInput.fill(faker.person.firstName());
-    await checkoutPage.lastNameInput.fill(faker.person.lastName());
-    await checkoutPage.postCodeInput.fill(faker.location.zipCode());
-    await checkoutPage.continueButton.click();
-    await expect(checkoutPage.paymentInfo).toBeVisible();
-    await expect(checkoutPage.shippingInfo).toBeVisible();
-    await checkoutPage.submitOrderButton.click();
+    expect(await checkoutPage.productNameIsVisible(), { message: 'The product name is not visible' }).toBeTruthy();
+    await checkoutPage.clickCheckoutButton();
+    await checkoutPage.fillFirstName();
+    await checkoutPage.fillLastName();
+    await checkoutPage.fillPostcodeInput();
+    await checkoutPage.clickContinueButton();
+    expect(await checkoutPage.paymentInformationIsVisible(), { message: 'The payment information is not visible' }).toBeTruthy();
+    expect(await checkoutPage.shippingInformationIsVisible(), { message: 'The shipping information is not visible' }).toBeTruthy();
+    await checkoutPage.clickSubmitOrderButton();
 
-    await expect(confirmationPage.finishHeader).toBeVisible();
-    await expect(confirmationPage.completeHeader).toBeVisible();
+    expect(await confirmationPage.finishHeaderIsVisible(), { message: 'The finish header is not visible' }).toBeTruthy();
+    expect(await confirmationPage.completeHeaderIsVisible(), { message: 'The complete header is not visible' }).toBeTruthy();
   });
 });
