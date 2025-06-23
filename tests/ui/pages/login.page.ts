@@ -1,11 +1,10 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import { Homepage } from './home.page';
 
 export class LoginPage {
-  readonly page: Page;
-  readonly usernameInput: Locator;
-  readonly passwordInput: Locator;
-  readonly loginButton: Locator;
+  private readonly page: Page;
+  private readonly usernameInput: Locator;
+  private readonly passwordInput: Locator;
+  private readonly loginButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -19,8 +18,14 @@ export class LoginPage {
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
+  }
 
-    const homepage = new Homepage(this.page);
-    await expect(homepage.shopPage).toBeVisible();
+  async usernameInputIsVisible() {
+    try {
+      await expect(this.usernameInput).toBeVisible();
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
