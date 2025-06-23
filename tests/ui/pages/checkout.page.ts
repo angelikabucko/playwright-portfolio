@@ -1,16 +1,17 @@
-import { type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
+import { faker } from '@faker-js/faker';
 
 export class CheckoutPage {
-  readonly page: Page;
-  readonly productName: Locator;
-  readonly checkoutButton: Locator;
-  readonly firstNameInput: Locator;
-  readonly lastNameInput: Locator;
-  readonly postCodeInput: Locator;
-  readonly continueButton: Locator;
-  readonly paymentInfo: Locator;
-  readonly shippingInfo: Locator;
-  readonly submitOrderButton: Locator;
+  private readonly page: Page;
+  private readonly productName: Locator;
+  private readonly checkoutButton: Locator;
+  private readonly firstNameInput: Locator;
+  private readonly lastNameInput: Locator;
+  private readonly postcodeInput: Locator;
+  private readonly continueButton: Locator;
+  private readonly paymentInformation: Locator;
+  private readonly shippingInformation: Locator;
+  private readonly submitOrderButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -18,10 +19,61 @@ export class CheckoutPage {
     this.checkoutButton = page.getByRole('link', { name: 'CHECKOUT' });
     this.firstNameInput = page.getByPlaceholder('First Name');
     this.lastNameInput = page.getByPlaceholder('Last Name');
-    this.postCodeInput = page.getByPlaceholder('Zip/Postal Code');
+    this.postcodeInput = page.getByPlaceholder('Zip/Postal Code');
     this.continueButton = page.getByRole('button', { name: 'Continue' });
-    this.paymentInfo = page.getByText('Payment Information');
-    this.shippingInfo = page.getByText('Shipping Information');
+    this.paymentInformation = page.getByText('Payment Information');
+    this.shippingInformation = page.getByText('Shipping Information');
     this.submitOrderButton = page.getByRole('link', { name: 'FINISH' });
+  }
+
+  async clickCheckoutButton() {
+    await this.checkoutButton.click();
+  }
+
+  async fillFirstName() {
+    await this.firstNameInput.fill(faker.person.firstName());
+  }
+
+  async fillLastName() {
+    await this.lastNameInput.fill(faker.person.lastName());
+  }
+
+  async fillPostcodeInput() {
+    await this.postcodeInput.fill(faker.location.zipCode());
+  }
+
+  async clickContinueButton() {
+    await this.continueButton.click();
+  }
+
+  async clickSubmitOrderButton() {
+    await this.submitOrderButton.click();
+  }
+
+  async productNameIsVisible() {
+    try {
+      await expect(this.productName).toBeVisible();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async paymentInformationIsVisible() {
+    try {
+      await expect(this.paymentInformation).toBeVisible();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async shippingInformationIsVisible() {
+    try {
+      await expect(this.shippingInformation).toBeVisible();
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
