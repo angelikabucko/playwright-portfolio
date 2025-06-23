@@ -19,7 +19,7 @@ test.describe('Feature: Update booking', () => {
   });
 
   test.afterEach('Teardown - Delete booking', async ({ request }) => {
-    await utils.deleteBooking(request, bookingId);
+    await utils.deleteBooking(request, bookingId, authToken);
   });
 
   test('Complete update to the booking', async ({ request }) => {
