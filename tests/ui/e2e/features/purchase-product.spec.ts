@@ -1,55 +1,40 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../pages/login.page';
-import { Homepage } from '../../pages/home.page';
+import { test, expect } from '../../fixtures/fixtures';
 import { ProductPage } from '../../pages/product.page';
 import { CheckoutPage } from '../../pages/checkout.page';
 import { ConfirmationPage } from '../../pages/confirmation.page';
-import dotenv from 'dotenv';
-dotenv.config();
+import { faker } from '@faker-js/faker';
 
-let loginPage: LoginPage;
-let homePage: Homepage;
-let productPage: ProductPage;
-let checkoutPage: CheckoutPage;
-let confirmationPage: ConfirmationPage;
+const productName = 'Backpack';
 
 test.describe('Feature: Purchase a product from the shop', () => {
-  test.beforeEach('Setup - Login', async ({ page }) => {
-    loginPage = new LoginPage(page);
-    homePage = new Homepage(page);
-    productPage = new ProductPage(page);
-    checkoutPage = new CheckoutPage(page);
-    confirmationPage = new ConfirmationPage(page);
+  test('The user can successfully purchase a product from the website, complete the order and recieve a confirmation screen', async ({ homePage, page }) => {
+    const productPage = new ProductPage(page);
+    const checkoutPage = new CheckoutPage(page);
+    const confirmationPage = new ConfirmationPage(page);
 
-    await loginPage.logIn(process.env.UI_STANDARD_USERNAME!, process.env.UI_STANDARD_PASSWORD!);
-    expect(homePage.shopPageIsVisible(), { message: 'Shop page is not visible' }).toBeTruthy();
-  });
-
-  test.afterEach('Teardown - Log out', async () => {
-    await confirmationPage.clickMenuButton();
-    await confirmationPage.clickLogOutLink();
-
-    expect(loginPage.usernameInputIsVisible(), { message: 'Username Input is not visible' }).toBeTruthy();
-  });
-
-  test('The user purchases a product from the website, completes the order and recieves a confirmation screen', async () => {
-    await homePage.clickProductBackpack();
-    expect(productPage.productDetailsIsVisible(), { message: 'Product details are not visible' }).toBeTruthy();
+    //FIXME: Fix product selection
+    await homePage.clickProductAddToCartButton(productName);
+    await expect(productPage.productDetails).toBeVisible();
 
     await productPage.clickAddToCartButton();
-    await productPage.clickNewItemAddedLink();
+    await productPage.clickNewItemAdded();
 
-    expect(await checkoutPage.productNameIsVisible(), { message: 'The product name is not visible' }).toBeTruthy();
+    await expect(checkoutPage.productName).toBeVisible();
+
     await checkoutPage.clickCheckoutButton();
-    await checkoutPage.fillFirstName();
-    await checkoutPage.fillLastName();
-    await checkoutPage.fillPostcodeInput();
+    await checkoutPage.fillFirstName(faker.person.firstName());
+    await checkoutPage.fillLastName(faker.person.lastName());
+    await checkoutPage.fillPostCode(faker.location.zipCode());
     await checkoutPage.clickContinueButton();
-    expect(await checkoutPage.paymentInformationIsVisible(), { message: 'The payment information is not visible' }).toBeTruthy();
-    expect(await checkoutPage.shippingInformationIsVisible(), { message: 'The shipping information is not visible' }).toBeTruthy();
+
+    await expect(checkoutPage.paymentInfo).toBeVisible();
+    await expect(checkoutPage.shippingInfo).toBeVisible();
     await checkoutPage.clickSubmitOrderButton();
 
-    expect(await confirmationPage.finishHeaderIsVisible(), { message: 'The finish header is not visible' }).toBeTruthy();
-    expect(await confirmationPage.completeHeaderIsVisible(), { message: 'The complete header is not visible' }).toBeTruthy();
+    await expect(confirmationPage.finishHeader).toBeVisible();
+    await expect(confirmationPage.completeHeader).toBeVisible();
+
+    await confirmationPage.clickMenuButton();
+    await confirmationPage.clickLogOutLink();
   });
 });

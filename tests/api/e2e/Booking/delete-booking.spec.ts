@@ -1,38 +1,23 @@
-import { test, expect } from '@playwright/test';
-import { BookingResponse } from './utils/interfaces';
-import * as utils from './utils/api.utils';
-import dotenv from 'dotenv';
-dotenv.config();
+import { test, expect } from '../../fixtures/booking.fixtures';
+import * as utils from '../../utils/api.utils';
 
-let authToken: string;
-let createBooking: BookingResponse;
-let bookingId: number;
+test.describe('Feature: Delete booking | Success responses', { tag: ['@delete-booking', '@success'] }, () => {
+  test('Delete a booking', async ({ createBooking, bookingSerivce }) => {
+    const newBooking = createBooking;
+    const bookingId: number = newBooking.bookingid;
+    const authToken = await utils.generateAuthToken(bookingSerivce.request);
 
-test.describe('Feature: Delete booking', () => {
-  test.beforeEach('Basic Auth', async ({ request }) => {
-    authToken = await utils.generateAuthToken(request);
+    const deleteBookingResponse = await bookingSerivce.deleteRequestToBookingByIdEndpoint(bookingId!, authToken);
+
+    expect(deleteBookingResponse.status()).toBe(201);
   });
+});
 
-  test.beforeEach('Setup - Create a booking', async ({ request }) => {
-    createBooking = await utils.createBooking(request);
-    bookingId = createBooking.bookingid;
-  });
-
-  test('Delete a booking', async ({ request }) => {
-    const deleteBookingResp = await request.delete(`/booking/${bookingId}`, {
-      headers: {
-        Cookie: `token=${authToken}`,
-      },
-    });
-    expect(deleteBookingResp.status()).toBe(201);
-  });
-
-  test('Attempt to delete a booking with invalid token', async ({ request }) => {
-    const deleteBookingResp = await request.delete(`/booking/${bookingId}`, {
-      headers: {
-        Cookie: `token=invalid`,
-      },
-    });
-    expect(deleteBookingResp.status()).toBe(403);
+test.describe('Feature: Delete a booking | Failure responses', { tag: ['@delete-booking', '@failures'] }, () => {
+  test('Delete a booking with invalid token | HTTP 403', async ({ createBooking, bookingSerivce }) => {
+    const newBooking = createBooking;
+    const bookingId: number = newBooking.bookingid;
+    const deleteBookingResponse = await bookingSerivce.deleteRequestToBookingByIdEndpoint(bookingId!, `token-invalid`);
+    expect(deleteBookingResponse.status()).toBe(403);
   });
 });

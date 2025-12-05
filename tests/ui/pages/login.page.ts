@@ -1,31 +1,37 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 
 export class LoginPage {
-  private readonly page: Page;
-  private readonly usernameInput: Locator;
-  private readonly passwordInput: Locator;
-  private readonly loginButton: Locator;
+  readonly usernameInput: Locator;
+  readonly passwordInput: Locator;
+  readonly loginButton: Locator;
 
-  constructor(page: Page) {
+  constructor(readonly page: Page) {
     this.page = page;
     this.usernameInput = page.getByPlaceholder('Username');
     this.passwordInput = page.getByPlaceholder('Password');
     this.loginButton = page.getByRole('button', { name: 'Login' });
   }
 
-  async logIn(username: string, password: string) {
-    await this.page.goto('https://www.saucedemo.com/v1/index.html');
+  async navigateToLoginPage() {
+    await this.page.goto('https://www.saucedemo.com/');
+  }
+
+  async fillUsername(username: string) {
     await this.usernameInput.fill(username);
+  }
+
+  async fillPassword(password: string) {
     await this.passwordInput.fill(password);
+  }
+
+  async clickLoginButton() {
     await this.loginButton.click();
   }
 
-  async usernameInputIsVisible() {
-    try {
-      await expect(this.usernameInput).toBeVisible();
-      return true;
-    } catch {
-      return false;
-    }
+  async logIn(username: string, password: string) {
+    await this.navigateToLoginPage();
+    await this.fillUsername(username);
+    await this.fillPassword(password);
+    await this.clickLoginButton();
   }
 }

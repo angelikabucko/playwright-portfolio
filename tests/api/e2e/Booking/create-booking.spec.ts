@@ -1,37 +1,32 @@
-import { test, expect } from '@playwright/test';
-import * as utils from './utils/api.utils';
+import { test, expect } from '../../fixtures/booking.fixtures';
+import * as utils from '../../utils/api.utils';
 
 let authToken: string;
 let bookingId: number;
 
-test.describe('Feature: Create a booking', () => {
-  test.beforeEach('Basic Auth', async ({ request }) => {
-    authToken = await utils.generateAuthToken(request);
+test.describe('Feature: Create a booking | Success responses', { tag: ['@create-booking', '@success'] }, () => {
+  test.afterEach('Teardown - Delete booking', async ({ bookingSerivce }) => {
+    await bookingSerivce.deleteRequestToBookingByIdEndpoint(bookingId!, await utils.generateAuthToken(bookingSerivce.request));
   });
 
-  test.afterEach('Teardown - Delete booking', async ({ request }) => {
-    await utils.deleteBooking(request, bookingId, authToken);
-  });
+  test('Create a basic booking', async ({ bookingSerivce }) => {
+    const newBookingData = await utils.newBooking();
 
-  test('Create a basic booking', async ({ request }) => {
-    const createNewBooking = await utils.newBooking();
+    const createNewBookingResponse = await bookingSerivce.postRequestToBookingEndpoint(newBookingData);
+    expect(createNewBookingResponse.status()).toBe(200);
 
-    const createNewBookingResp = await request.post('/booking', {
-      data: createNewBooking,
-    });
-    expect(createNewBookingResp.status()).toBe(200);
+    const newBookingBody = await createNewBookingResponse.json();
+    expect(newBookingBody).toHaveProperty('bookingid');
+    bookingId = newBookingBody.bookingid;
 
-    const createNewBookingBody = await createNewBookingResp.json();
-    expect(createNewBookingBody).toHaveProperty('bookingid');
-    bookingId = createNewBookingBody.bookingid;
-
-    //GET Booking within POST request to double check that request correctly persisted to DB
-    const validateNewBooking = await utils.validateResponse(request, bookingId);
-    expect(validateNewBooking).toHaveProperty('firstname', createNewBooking.firstname);
-    expect(validateNewBooking).toHaveProperty('lastname', createNewBooking.lastname);
-    expect(validateNewBooking).toHaveProperty('totalprice', createNewBooking.totalprice);
-    expect(validateNewBooking).toHaveProperty('depositpaid', createNewBooking.depositpaid);
-    expect(validateNewBooking).toHaveProperty('bookingdates', createNewBooking.bookingdates);
-    expect(validateNewBooking).toHaveProperty('additionalneeds', createNewBooking.additionalneeds);
+    expect(newBookingBody).toHaveProperty('booking.firstname', newBookingData.firstname);
+    expect(newBookingBody).toHaveProperty('booking.lastname', newBookingData.lastname);
+    expect(newBookingBody).toHaveProperty('booking.totalprice', newBookingData.totalprice);
+    expect(newBookingBody).toHaveProperty('booking.depositpaid', newBookingData.depositpaid);
+    expect(newBookingBody).toHaveProperty('booking.bookingdates', newBookingData.bookingdates);
+    expect(newBookingBody).toHaveProperty('booking.additionalneeds', newBookingData.additionalneeds);
   });
 });
+
+//TODO: Implement failure test cases
+test.describe('Feature: Create a booking | Failure responses', { tag: ['@create-booking', '@failures'] }, () => {});

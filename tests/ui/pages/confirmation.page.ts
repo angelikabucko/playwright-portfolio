@@ -1,13 +1,12 @@
-import { type Locator, type Page, expect } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 
 export class ConfirmationPage {
-  private readonly page: Page;
-  private readonly finishHeader: Locator;
-  private readonly completeHeader: Locator;
-  private readonly menuButton: Locator;
-  private readonly logOutLink: Locator;
+  readonly finishHeader: Locator;
+  readonly completeHeader: Locator;
+  readonly menuButton: Locator;
+  readonly logOutLink: Locator;
 
-  constructor(page: Page) {
+  constructor(readonly page: Page) {
     this.page = page;
     this.finishHeader = page.getByText('Finish');
     this.completeHeader = page.getByText('THANK YOU FOR YOUR ORDER');
@@ -21,23 +20,5 @@ export class ConfirmationPage {
 
   async clickLogOutLink() {
     await this.logOutLink.click();
-  }
-
-  async finishHeaderIsVisible() {
-    try {
-      await expect(this.finishHeader).toBeVisible();
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  async completeHeaderIsVisible() {
-    try {
-      await expect(this.completeHeader).toBeVisible();
-      return true;
-    } catch {
-      return false;
-    }
   }
 }

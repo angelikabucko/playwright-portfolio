@@ -1,26 +1,16 @@
-import { type Locator, type Page, expect } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 
 export class Homepage {
-  private readonly page: Page;
-  private readonly shopPage: Locator;
-  private readonly productBackpack: Locator;
+  readonly shopPage: Locator;
+  readonly productAddToCartButton: (productName: string) => Locator;
 
-  constructor(page: Page) {
+  constructor(readonly page: Page) {
     this.page = page;
     this.shopPage = page.getByText('Products');
-    this.productBackpack = page.getByRole('link', { name: 'Sauce Labs Backpack' });
+    this.productAddToCartButton = (productName: string) => page.getByRole('link', { name: `Sauce Labs ${productName}` }).first();
   }
 
-  async shopPageIsVisible() {
-    try {
-      await expect(this.shopPage).toBeVisible();
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  async clickProductBackpack() {
-    await this.productBackpack.click();
+  async clickProductAddToCartButton(productName: string) {
+    await this.productAddToCartButton(productName).click();
   }
 }
