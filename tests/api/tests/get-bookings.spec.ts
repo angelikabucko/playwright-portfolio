@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures/booking.fixtures';
+import { test, expect } from '../fixtures/booking.fixtures';
 
 test.describe('Feature: Fetch list of bookings | Success responses', { tag: ['@fetch-bookings', '@success'] }, () => {
   test('Get list of bookings', async ({ bookingSerivce }) => {

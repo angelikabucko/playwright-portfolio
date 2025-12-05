@@ -1,7 +1,6 @@
-import { test, expect } from '../../fixtures/booking.fixtures';
-import * as utils from '../../utils/api.utils';
+import { test, expect } from '../fixtures/booking.fixtures';
+import * as utils from '../utils/api.utils';
 
-let authToken: string;
 let bookingId: number;
 
 test.describe('Feature: Create a booking | Success responses', { tag: ['@create-booking', '@success'] }, () => {

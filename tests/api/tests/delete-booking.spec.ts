@@ -1,5 +1,5 @@
-import { test, expect } from '../../fixtures/booking.fixtures';
-import * as utils from '../../utils/api.utils';
+import { test, expect } from '../fixtures/booking.fixtures';
+import * as utils from '../utils/api.utils';
 
 test.describe('Feature: Delete booking | Success responses', { tag: ['@delete-booking', '@success'] }, () => {
   test('Delete a booking', async ({ createBooking, bookingSerivce }) => {

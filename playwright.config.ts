@@ -15,7 +15,7 @@ export default defineConfig({
   projects: [
     {
       name: 'API Tests - Booking',
-      testDir: './tests/api/e2e/Booking',
+      testDir: './tests/api/tests',
       use: {
         baseURL: 'https://restful-booker.herokuapp.com',
         extraHTTPHeaders: {

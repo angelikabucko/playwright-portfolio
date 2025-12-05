@@ -1,5 +1,3 @@
-import { UserInformation } from '../types/user.type';
-
 export interface Booking {
   bookingid: number;
   booking: {

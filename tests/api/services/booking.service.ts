@@ -3,10 +3,12 @@ import { BookingRequest } from '../interfaces/booking.request.interface';
 
 export class BookingService {
   private readonly bookingEndpoint = '/booking';
-  private readonly bookingByIdEndpoint = (id: number) => `/booking/${id}`;
+  private readonly bookingByIdEndpoint = (id: number) => `${this.bookingEndpoint}/${id}`;
+  private readonly cookieHeader: (authToken: string)  => string;
 
   constructor(readonly request: APIRequestContext) {
     this.request = request;
+    this.cookieHeader = (authToken: string) => `token=${authToken}`;
   }
 
   async postRequestToBookingEndpoint(newBookingData: BookingRequest): Promise<APIResponse> {
@@ -18,7 +20,7 @@ export class BookingService {
   async putRequestToBookingByIdEndpoint(bookingId: number, updatedBookingData: BookingRequest, authToken: string): Promise<APIResponse> {
     return this.request.put(this.bookingByIdEndpoint(bookingId), {
       headers: {
-        Cookie: `token=${authToken}`,
+        Cookie: this.cookieHeader(authToken),
       },
       data: updatedBookingData,
     });
@@ -27,7 +29,7 @@ export class BookingService {
   async patchRequestToBookingByIdEndpoint(bookingId: number, updatedBookingData: Partial<BookingRequest>, authToken: string): Promise<APIResponse> {
     return this.request.patch(this.bookingByIdEndpoint(bookingId), {
       headers: {
-        Cookie: `token=${authToken}`,
+        Cookie: this.cookieHeader(authToken),
       },
       data: updatedBookingData,
     });
@@ -44,7 +46,7 @@ export class BookingService {
   async deleteRequestToBookingByIdEndpoint(bookingId: number, authToken: string): Promise<APIResponse> {
     return this.request.delete(this.bookingByIdEndpoint(bookingId), {
       headers: {
-        Cookie: `token=${authToken}`,
+        Cookie: this.cookieHeader(authToken),
       },
     });
   }

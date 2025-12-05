@@ -1,9 +1,5 @@
-import { test, expect } from '../../fixtures/booking.fixtures';
-import * as utils from '../../utils/api.utils';
-
-let authToken: string;
-let createBooking: BookingResponse;
-let bookingId: number;
+import { test, expect } from '../fixtures/booking.fixtures';
+import * as utils from '../utils/api.utils';
 
 test.describe('Feature: Update booking | Success responses', { tag: ['@update-booking', '@success'] }, () => {
   test('Complete update to the booking', async ({ fullBooking, bookingSerivce }) => {
