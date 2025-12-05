@@ -1,27 +1,27 @@
 import { type Locator, type Page } from '@playwright/test';
 
 export class CheckoutPage {
-  readonly productName: Locator;
+  readonly productName: (productName: string) => Locator;
   readonly checkoutButton: Locator;
   readonly firstNameInput: Locator;
   readonly lastNameInput: Locator;
-  readonly postCodeInput: Locator;
+  readonly postcodeInput: Locator;
   readonly continueButton: Locator;
-  readonly paymentInfo: Locator;
-  readonly shippingInfo: Locator;
+  readonly paymentInformation: Locator;
+  readonly shippingInformation: Locator;
   readonly submitOrderButton: Locator;
 
   constructor(readonly page: Page) {
     this.page = page;
-    this.productName = page.getByRole('link', { name: 'Sauce Labs Backpack' });
-    this.checkoutButton = page.getByRole('link', { name: 'CHECKOUT' });
+    this.productName = (productName: string) => page.getByRole('link', { name: `Sauce Labs ${productName}` });
+    this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
     this.firstNameInput = page.getByPlaceholder('First Name');
     this.lastNameInput = page.getByPlaceholder('Last Name');
     this.postcodeInput = page.getByPlaceholder('Zip/Postal Code');
     this.continueButton = page.getByRole('button', { name: 'Continue' });
     this.paymentInformation = page.getByText('Payment Information');
     this.shippingInformation = page.getByText('Shipping Information');
-    this.submitOrderButton = page.getByRole('link', { name: 'FINISH' });
+    this.submitOrderButton = page.getByRole('button', { name: 'Finish' });
   }
 
   async clickCheckoutButton() {
@@ -37,7 +37,7 @@ export class CheckoutPage {
   }
 
   async fillPostCode(postCode: string) {
-    await this.postCodeInput.fill(postCode);
+    await this.postcodeInput.fill(postCode);
   }
 
   async clickContinueButton() {
@@ -46,5 +46,11 @@ export class CheckoutPage {
 
   async clickSubmitOrderButton() {
     await this.submitOrderButton.click();
+  }
+
+  async fillCheckoutForm(firstName: string, lastName: string, postCode: string) {
+    await this.fillFirstName(firstName);
+    await this.fillLastName(lastName);
+    await this.fillPostCode(postCode);
   }
 }

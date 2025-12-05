@@ -11,11 +11,12 @@ export default defineConfig({
   reporter: 'html',
   use: {
     trace: 'on',
+    testIdAttribute: 'data-test',
   },
   projects: [
     {
       name: 'API Tests - Booking',
-      testDir: './tests/api/tests',
+      testDir: './tests/api',
       use: {
         baseURL: 'https://restful-booker.herokuapp.com',
         extraHTTPHeaders: {

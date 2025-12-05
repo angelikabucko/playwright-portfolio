@@ -8,8 +8,8 @@ export class ProductPage {
   constructor(readonly page: Page) {
     this.page = page;
     this.productDetails = page.getByText('Sauce Labs Backpack');
-    this.addToCartButton = page.getByRole('button', { name: 'ADD TO CART' });
-    this.newItemAdded = page.getByRole('link', { name: '1' });
+    this.addToCartButton = page.getByRole('button', {name: 'Add to cart'})
+    this.newItemAdded = page.getByTestId('shopping-cart-link')
   }
 
   async clickAddToCartButton() {

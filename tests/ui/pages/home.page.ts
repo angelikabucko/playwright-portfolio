@@ -7,7 +7,7 @@ export class Homepage {
   constructor(readonly page: Page) {
     this.page = page;
     this.shopPage = page.getByText('Products');
-    this.productAddToCartButton = (productName: string) => page.getByRole('link', { name: `Sauce Labs ${productName}` }).first();
+    this.productAddToCartButton = (productName: string) => page.getByTestId('inventory-item-name').getByText(`Sauce Labs ${productName}`)
   }
 
   async clickProductAddToCartButton(productName: string) {

@@ -1,15 +1,15 @@
 import { type Locator, type Page } from '@playwright/test';
 
 export class ConfirmationPage {
-  readonly finishHeader: Locator;
-  readonly completeHeader: Locator;
+  readonly checkoutCompleted: Locator;
+  readonly thankYouHeader: Locator;
   readonly menuButton: Locator;
   readonly logOutLink: Locator;
 
   constructor(readonly page: Page) {
     this.page = page;
-    this.finishHeader = page.getByText('Finish');
-    this.completeHeader = page.getByText('THANK YOU FOR YOUR ORDER');
+    this.checkoutCompleted = page.getByText('Checkout: Complete!')
+    this.thankYouHeader = page.getByText('Thank you for your order!');
     this.menuButton = page.getByRole('button', { name: 'Open menu' });
     this.logOutLink = page.getByRole('link', { name: 'Logout' });
   }

@@ -1,7 +1,7 @@
-import { test, expect } from '../../fixtures/fixtures';
-import { ProductPage } from '../../pages/product.page';
-import { CheckoutPage } from '../../pages/checkout.page';
-import { ConfirmationPage } from '../../pages/confirmation.page';
+import { test, expect } from '../fixtures/fixtures';
+import { ProductPage } from '../pages/product.page';
+import { CheckoutPage } from '../pages/checkout.page';
+import { ConfirmationPage } from '../pages/confirmation.page';
 import { faker } from '@faker-js/faker';
 
 const productName = 'Backpack';
@@ -12,27 +12,26 @@ test.describe('Feature: Purchase a product from the shop', () => {
     const checkoutPage = new CheckoutPage(page);
     const confirmationPage = new ConfirmationPage(page);
 
-    //FIXME: Fix product selection
     await homePage.clickProductAddToCartButton(productName);
     await expect(productPage.productDetails).toBeVisible();
 
     await productPage.clickAddToCartButton();
     await productPage.clickNewItemAdded();
 
-    await expect(checkoutPage.productName).toBeVisible();
+    await expect(checkoutPage.productName(productName)).toBeVisible();
 
     await checkoutPage.clickCheckoutButton();
-    await checkoutPage.fillFirstName(faker.person.firstName());
-    await checkoutPage.fillLastName(faker.person.lastName());
-    await checkoutPage.fillPostCode(faker.location.zipCode());
+
+    await checkoutPage.fillCheckoutForm(faker.person.firstName(), faker.person.lastName(), faker.location.zipCode())
+    
     await checkoutPage.clickContinueButton();
 
-    await expect(checkoutPage.paymentInfo).toBeVisible();
-    await expect(checkoutPage.shippingInfo).toBeVisible();
+    await expect(checkoutPage.paymentInformation).toBeVisible();
+    await expect(checkoutPage.shippingInformation).toBeVisible();
     await checkoutPage.clickSubmitOrderButton();
 
-    await expect(confirmationPage.finishHeader).toBeVisible();
-    await expect(confirmationPage.completeHeader).toBeVisible();
+    await expect(confirmationPage.checkoutCompleted).toBeVisible();
+    await expect(confirmationPage.thankYouHeader).toBeVisible();
 
     await confirmationPage.clickMenuButton();
     await confirmationPage.clickLogOutLink();
